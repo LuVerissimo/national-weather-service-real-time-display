@@ -12,8 +12,8 @@ def deps do
   [
     {:core, "~> 0.1.0"}
     {:commanded, "~> 1.4"},
-    {:commanded_ecto_adapter, "~> 1.2"},
-    {:jason, "~> 1.2"}
+    {:commanded_eventstore_adapter, "~> 1.4"},
+    {:jason, "~> 1.4"}
   ]
 end
 ```
