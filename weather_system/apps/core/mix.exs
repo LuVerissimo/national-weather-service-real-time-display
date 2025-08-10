@@ -20,7 +20,6 @@ defmodule Core.MixProject do
     [
       extra_applications: [:logger],
       mod: {Core.Application, []}
-
     ]
   end
 

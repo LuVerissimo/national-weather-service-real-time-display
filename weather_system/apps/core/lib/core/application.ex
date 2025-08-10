@@ -1,9 +1,12 @@
 defmodule Core.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
-  @moduledoc false
-
   use Application
+  use Commanded.Application,
+    otp_app: :core,
+    event_store: [
+      adapter: Commanded.EventStore.Adapters.EventStore,
+      event_store: Core.EventStore
+    ]
+
 
   @impl true
   def start(_type, _args) do
