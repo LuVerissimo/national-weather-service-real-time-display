@@ -12,7 +12,6 @@ defmodule Core.Application do
       Core.App
     ]
 
-
     opts = [strategy: :one_for_one, name: Core.Supervisor]
     Supervisor.start_link(children, opts)
   end

@@ -91,15 +91,6 @@ config :core, Core.Repo, repo_config
 # Makes event store available to Commanded (event sourcing library)
 config :core, event_stores: [Core.EventStore]
 
-# Uncomment the following lines if you want to use Ecto as the event store adapter
-# config :commanded,
-#   event_store: [
-#     adapter: Commanded.EventStore.Adapters.Ecto,
-#     repo: Core.Repo
-#   ]
-
-
-
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

@@ -9,7 +9,7 @@ defmodule Core.MixProject do
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
       lockfile: "../../mix.lock",
-      elixir: "~> 1.17",
+      elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -17,9 +17,10 @@ defmodule Core.MixProject do
 
   # Run "mix help compile.app" to learn about applications.
   def application do
-    [
-      extra_applications: [:logger],
-      mod: {Core.Application, []}
+     [
+      mod: {Core.Application, []},
+      applications: [:commanded, :eventstore, :ecto_sql],
+      extra_applications: [:logger, :runtime_tools]
     ]
   end
 
@@ -27,6 +28,7 @@ defmodule Core.MixProject do
   defp deps do
     [
       {:commanded, "~> 1.4"},
+      {:eventstore, "~> 1.4"},
       {:commanded_eventstore_adapter, "~> 1.4"},
       {:jason, "~> 1.4"},
       {:postgrex, ">= 0.0.0"},
