@@ -69,27 +69,37 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :core, Core.Repo,
+# Configures the core event store
+repo_config = [
   adapter: Ecto.Adapters.Postgres,
   database: "weather_system_dev",
   username: "weather_system",
   password: "weather_system",
-  hostname: "localhost"
+  hostname: "localhost",
+  show_sensitive_data_on_connection_error: true,
+  pool_size: 10
+]
+config :core, Core.EventStore,
+[
+  repo: Core.Repo,
+  serializer: Commanded.Serialization.JsonSerializer
+] ++ repo_config
 
-config :commanded,
-  event_store: [
-    adapter: Commanded.EventStore.Adapters.Ecto,
-    repo: Core.Repo
-  ]
+# Ecto Repo for Event Store
+config :core, Core.Repo, repo_config
+
+# Makes event store available to Commanded (event sourcing library)
+config :core, event_stores: [Core.EventStore]
+
+# Uncomment the following lines if you want to use Ecto as the event store adapter
+# config :commanded,
+#   event_store: [
+#     adapter: Commanded.EventStore.Adapters.Ecto,
+#     repo: Core.Repo
+#   ]
+
+
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
-
-# Sample configuration:
-#
-#     config :logger, :console,
-#       level: :info,
-#       format: "$date $time [$level] $metadata$message\n",
-#       metadata: [:user_id]
-#
