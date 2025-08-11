@@ -17,12 +17,11 @@ defmodule Core.MixProject do
 
   # Run "mix help compile.app" to learn about applications.
   def application do
-     [
-      mod: {Core.Application, []},
-      applications: [:commanded, :eventstore, :ecto_sql],
-      extra_applications: [:logger, :runtime_tools]
-    ]
-  end
+  [
+    mod: {Core.Application, []},
+    extra_applications: [:logger, :runtime_tools, :commanded, :eventstore, :ecto_sql]
+  ]
+end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do

@@ -26,10 +26,10 @@ defmodule Ingestion.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:broadway, "~> 1.0"},
+      {:broadway, "~> 1.2"},
       {:broadway_kafka, "~> 0.4"},
       {:finch, "~> 0.13"},
-      {:jason, "~> 1.2"}
+      {:jason, "~> 1.2"},
     ]
   end
 end
