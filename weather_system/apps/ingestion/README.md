@@ -1,6 +1,6 @@
 # Ingestion
 
-**This application will be responsible for fetching data from external sources using Broadway.**
+**This ingestion application will fetch data from the National Weather Service and publish it to a Kafka topic using Broadway.**
 
 ## Installation
 
