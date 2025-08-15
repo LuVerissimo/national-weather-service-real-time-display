@@ -4,5 +4,8 @@ defmodule Core.App do
     event_store: [
       adapter: Commanded.EventStore.Adapters.EventStore,
       event_store: Core.EventStore
+    ],
+    projections: [
+      Core.Station.Projectors.ObservationProjector
     ]
 end
