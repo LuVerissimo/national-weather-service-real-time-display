@@ -1,16 +1,16 @@
 defmodule Core.Station.Aggregate do
-
   defstruct [
-  :station_id,
-  :temperature,
-  :humidity,
-  :wind_speed,
-  :observed_at,
-  :last_observation,
+    :station_id,
+    :temperature,
+    :humidity,
+    :wind_speed,
+    :observed_at,
+    :last_observation
   ]
+  alias Core.Station.Commands.RecordObservation
 
-  def execute(%{station_id: nil}, %Core.Station.Commands.RecordObservation{} = cmd) do
-    %Core.Station.Commands.RecordObservation{
+  def execute(%{station_id: nil}, %RecordObservation{} = cmd) do
+    %RecordObservation{
       station_id: cmd.station_id,
       temperature: cmd.temperature,
       humidity: cmd.humidity,
@@ -19,8 +19,8 @@ defmodule Core.Station.Aggregate do
     }
   end
 
-  def execute(%{station_id: _}, %Core.Station.Commands.RecordObservation{} = cmd) do
-    %Core.Station.Commands.RecordObservation{
+  def execute(%{station_id: _}, %RecordObservation{} = cmd) do
+    %RecordObservation{
       station_id: cmd.station_id,
       temperature: cmd.temperature,
       humidity: cmd.humidity,
@@ -31,11 +31,12 @@ defmodule Core.Station.Aggregate do
 
   def apply(%__MODULE__{} = state, %Core.Station.Events.ObservationRecorded{} = event) do
     %__MODULE__{
-      state | station_id: event.station_id,
-      temperature: event.temperature,
-      humidity: event.humidity,
-      wind_speed: event.wind_speed,
-      observed_at: event.observed_at
+      state
+      | station_id: event.station_id,
+        temperature: event.temperature,
+        humidity: event.humidity,
+        wind_speed: event.wind_speed,
+        observed_at: event.observed_at
     }
   end
 end

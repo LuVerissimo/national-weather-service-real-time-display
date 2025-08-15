@@ -1,5 +1,5 @@
 defmodule Core.Station.Projectors.ObservationProjector do
-  use Commanded.Ecto.Projector,
+  use Commanded.Projections.Ecto,
     application: Core.App,
     repo: Core.Repo,
     name: "ObservationProjector"
@@ -8,14 +8,16 @@ defmodule Core.Station.Projectors.ObservationProjector do
   alias Core.Station.ReadModels.Observation
 
   def project(%ObservationRecorded{} = event, _metadata) do
-    %Observation{
+    attrs = %{
       station_id: event.station_id,
       temperature: event.temperature,
       humidity: event.humidity,
       wind_speed: event.wind_speed,
       observed_at: event.observed_at
     }
-    |> Ecto.Changeset.cast(%{}, &1, Map.keys(&1))
+
+    %Observation{}
+    |> Ecto.Changeset.cast(attrs, Map.keys(attrs))
     |> Core.Repo.insert(on_conflict: :replace_all, conflict_target: :station_id)
   end
 end

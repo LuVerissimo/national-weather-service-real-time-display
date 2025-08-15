@@ -1,4 +1,4 @@
-defmodule Core.Station.ReadModel.Observation do
+defmodule Core.Station.ReadModels.Observation do
   use Ecto.Schema
 
   @primary_key {:station_id, :string, autogenerate: false}
