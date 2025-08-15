@@ -5,10 +5,11 @@ defmodule Web.WeatherDashboardLive do
 
   # subscribe and fetch initial weather data
   def mount(_params, _session, socket) do
-    Phoenix.PubSub.subscribe(Web.PubSub, "weather_updates")
+    if connected?(socket), do: Phoenix.PubSub.subscribe(Web.PubSub, "weather_updates")
 
     # Fetch from read model
     observations = Repo.all(Observation)
+
     {:ok, assign(socket, :observations, observations)}
   end
 
@@ -21,7 +22,6 @@ defmodule Web.WeatherDashboardLive do
           <h2><%= observation.station_id %></h2>
 
           <p><strong>Humidity: </strong> <%= observation.humidity %></p>
-          <p><strong>Location: </strong> <%= observation.location %></p>
           <p><strong>Temperature: </strong> <%= observation.temperature %>°C</p>
           <p><strong>Wind Speed: </strong> <%= observation.wind_speed %></p>
           <p><strong>Observed at: </strong> <%= observation.observed_at %></p>
