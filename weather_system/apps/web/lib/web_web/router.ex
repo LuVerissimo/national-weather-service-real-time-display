@@ -14,11 +14,16 @@ defmodule WebWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", WebWeb do
+    scope "/", Web do
     pipe_through :browser
 
-    get "/", PageController, :home
     live "/dashboard", WeatherDashboardLive
+  end
+
+
+  # Other scopes may use custom stacks.
+  scope "/api", Web do
+    pipe_through :api
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

@@ -3,26 +3,32 @@ defmodule Ingestion.WeatherPipeline do
 
   alias Broadway.Message
 
+  @hosts [{"localhost", 9092}]
+  @group_id "weather_ingestion"
+  @topics ["weather_alerts"]
   def start_link(_opts) do
     Broadway.start_link(
       __MODULE__,
+      name: __MODULE__,
       producer: [
         module: {
           BroadwayKafka.Producer,
           [
-            hosts: [localhost: 9092],
-            group_id: "weather_ingestion",
-            topics: ["weather_alerts"]
+            hosts: @hosts,
+            group_id: @group_id,
+            topics: @topics,
+            client_config: []
           ]
-        }
+        },
+        concurrency: 1
       ],
       processors: [
-        default: []
+        default: [concurrency: 10]
       ],
       batchers: [
         default: [
-          batch_size: 10,
-          batch_timeout: 2000
+          batch_size: 100,
+          batch_timeout: 1000
         ]
       ]
     )
@@ -42,7 +48,7 @@ defmodule Ingestion.WeatherPipeline do
   def handle_batch(_, messages, _, _) do
     # TODO Dispatch Commands Here
     for message <- messages do
-      IO.inspect(message.data)
+      IO.inspect(message.data, label: "Weather")
     end
 
     messages

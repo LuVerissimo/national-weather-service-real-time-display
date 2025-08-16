@@ -8,9 +8,10 @@ defmodule Core.Station.Aggregate do
     :last_observation
   ]
   alias Core.Station.Commands.RecordObservation
+  alias Core.Station.Events.ObservationRecorded
 
-  def execute(%{station_id: nil}, %RecordObservation{} = cmd) do
-    %RecordObservation{
+  def execute(%__MODULE__{station_id: nil}, %RecordObservation{} = cmd) do
+    %ObservationRecorded{
       station_id: cmd.station_id,
       temperature: cmd.temperature,
       humidity: cmd.humidity,
@@ -19,8 +20,8 @@ defmodule Core.Station.Aggregate do
     }
   end
 
-  def execute(%{station_id: _}, %RecordObservation{} = cmd) do
-    %RecordObservation{
+  def execute(%__MODULE__{station_id: _}, %RecordObservation{} = cmd) do
+    %ObservationRecorded{
       station_id: cmd.station_id,
       temperature: cmd.temperature,
       humidity: cmd.humidity,
@@ -29,7 +30,7 @@ defmodule Core.Station.Aggregate do
     }
   end
 
-  def apply(%__MODULE__{} = state, %Core.Station.Events.ObservationRecorded{} = event) do
+  def apply(%__MODULE__{} = state, %ObservationRecorded{} = event) do
     %__MODULE__{
       state
       | station_id: event.station_id,
