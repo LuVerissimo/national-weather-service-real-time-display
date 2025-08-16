@@ -1,4 +1,4 @@
-defmodule Web.WeatherDashboardLive do
+defmodule WebWeb.WeatherDashboardLive do
   use Phoenix.LiveView
   alias Core.Station.ReadModels.Observation
   alias Core.Repo

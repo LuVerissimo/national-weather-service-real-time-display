@@ -14,9 +14,8 @@ defmodule WebWeb.Router do
     plug :accepts, ["json"]
   end
 
-    scope "/", Web do
+    scope "/", WebWeb do
     pipe_through :browser
-
     live "/dashboard", WeatherDashboardLive
   end
 
