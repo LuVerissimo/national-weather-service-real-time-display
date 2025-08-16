@@ -29,6 +29,7 @@ end
       {:commanded, "~> 1.4"},
       {:eventstore, "~> 1.4"},
       {:commanded_eventstore_adapter, "~> 1.4"},
+      {:commanded_ecto_projections, "~> 1.3"},
       {:jason, "~> 1.4"},
       {:postgrex, ">= 0.0.0"},
       {:ecto_sql, "~> 3.11"}
