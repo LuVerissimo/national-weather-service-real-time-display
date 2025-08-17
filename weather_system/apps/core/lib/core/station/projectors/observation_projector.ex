@@ -16,8 +16,17 @@ defmodule Core.Station.Projectors.ObservationProjector do
       observed_at: event.observed_at
     }
 
-    %Observation{}
-    |> Ecto.Changeset.cast(attrs, Map.keys(attrs))
-    |> Core.Repo.insert(on_conflict: :replace_all, conflict_target: :station_id)
+    changeset =
+      %Observation{}
+      |> Ecto.Changeset.cast(attrs, Map.keys(attrs))
+      |> Ecto.Changeset.validate_required(Map.keys(attrs))
+
+    case Core.Repo.insert(changeset, on_conflict: :replace_all, conflict_target: :station_id) do
+      {:ok, observation} ->
+        Phoenix.PubSub.broadcast(Web.PubSub, "weather_updates", {:new_observation, observation})
+
+      {:error, changeset} ->
+        IO.inspect(changeset.errors, label: "Failed to insert observation")
+    end
   end
 end

@@ -6,10 +6,13 @@ defmodule Core.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      #Ecto repo
+      # Ecto repo
       Core.Repo,
-      #Commanded App
-      Core.App
+      # Commanded App
+      Core.App,
+      {Finch, name: Core.Finch},
+      # Oban supervisor
+      {Oban, Application.get_env(:core, Oban)}
     ]
 
     opts = [strategy: :one_for_one, name: Core.Supervisor]

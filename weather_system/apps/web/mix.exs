@@ -60,7 +60,8 @@ defmodule Web.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
       {:grpc, "~> 0.10"},
-      {:protobuf, "~> 0.11"}
+      {:protobuf, "~> 0.11"},
+      {:core, in_umbrella: true}
     ]
   end
 

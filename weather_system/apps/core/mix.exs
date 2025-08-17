@@ -17,11 +17,11 @@ defmodule Core.MixProject do
 
   # Run "mix help compile.app" to learn about applications.
   def application do
-  [
-    mod: {Core.Application, []},
-    extra_applications: [:logger, :runtime_tools, :commanded, :eventstore, :ecto_sql]
-  ]
-end
+    [
+      mod: {Core.Application, []},
+      extra_applications: [:logger, :runtime_tools, :commanded, :eventstore, :ecto_sql]
+    ]
+  end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
@@ -32,7 +32,9 @@ end
       {:commanded_ecto_projections, "~> 1.3"},
       {:jason, "~> 1.4"},
       {:postgrex, ">= 0.0.0"},
-      {:ecto_sql, "~> 3.11"}
+      {:ecto_sql, "~> 3.11"},
+      {:oban, "~> 2.17"},
+      {:finch, "~> 0.13"}
     ]
   end
 end
