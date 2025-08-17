@@ -105,6 +105,14 @@ config :core,
 config :core, ecto_repos: [Core.Repo]
 config :core, event_stores: [Core.EventStore]
 
+# ------------------------------
+# Configure Oban
+# ------------------------------
+config :core, Oban,
+  repo: Core.Repo,
+  plugins: [Oban.Plugins.Pruner],
+  queues: [default: 10]
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

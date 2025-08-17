@@ -9,7 +9,9 @@ defmodule Core.Application do
       #Ecto repo
       Core.Repo,
       #Commanded App
-      Core.App
+      Core.App,
+      # Oban supervisor
+      {Oban, Application.get_env(:core, Oban)}
     ]
 
     opts = [strategy: :one_for_one, name: Core.Supervisor]
