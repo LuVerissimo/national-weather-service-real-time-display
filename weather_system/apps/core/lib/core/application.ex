@@ -6,10 +6,11 @@ defmodule Core.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      #Ecto repo
+      # Ecto repo
       Core.Repo,
-      #Commanded App
+      # Commanded App
       Core.App,
+      {Finch, name: Core.Finch},
       # Oban supervisor
       {Oban, Application.get_env(:core, Oban)}
     ]
