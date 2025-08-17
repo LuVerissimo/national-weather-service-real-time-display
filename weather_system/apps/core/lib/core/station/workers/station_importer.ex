@@ -4,27 +4,26 @@ defmodule Core.Station.Workers.StationImporter do
     max_attempts: 3
 
   alias Core.Station.Workers.FetchStationDataWorker
+  alias Web.PubSub
 
   # Use to periodically fetch a list of active weather stations
   # then enqueue individual jobs to fetch data for each one.
 
+  # For each station, enqueue another job to fetch data with FetchStationDataWorker
   @impl Oban.Worker
   def perform(_args) do
-    # fetch from list of external stations
     stations = ["025PG", "045PG", "119SE"]
 
-    # For each station, enqueue another job to fetch data with FetchStationDataWorker
-    # Enqueuing Jobs
-    # All workers implement a new/2 function that converts an args map
-    # into a job changeset suitable for inserting into the database for later execution:
+    Enum.each(stations, fn station_id ->
+      # Insert job to fetch observation
+      %{station_id: station_id}
+      |> FetchStationDataWorker.new()
+      |> Oban.insert!()
 
-    jobs =
-      Enum.map(stations, fn station_id ->
-        IO.puts("Enqueuing job for station #{station_id}")
-        %{station_id: station_id} |> FetchStationDataWorker.new()
-      end)
-
-    Oban.insert_all(jobs)
+      # Broadcast that job has been enqueued
+      Phoenix.PubSub.broadcast(PubSub, "weather_updates", {:job_enqueued, station_id})
+      IO.puts("Enqueued job for station #{station_id}")
+    end)
 
     :ok
   end

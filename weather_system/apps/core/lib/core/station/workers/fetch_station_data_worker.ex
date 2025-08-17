@@ -8,19 +8,36 @@ defmodule Core.Station.Workers.FetchStationDataWorker do
   @impl Oban.Worker
   def perform(%Oban.Job{args: %{"station_id" => station_id}}) do
     with {:ok, observation} <- fetch_observation(station_id) do
-      %RecordObservation{
+      obs = %RecordObservation{
         station_id: station_id,
         temperature: observation.temperature,
         humidity: observation.humidity,
         wind_speed: observation.wind_speed,
         observed_at: observation.observed_at
       }
-      |> Core.App.dispatch()
+
+      Core.App.dispatch(obs)
+
+      # Broadcast for LiveView
+      Phoenix.PubSub.broadcast(
+        Web.PubSub,
+        "weather_updates",
+        {:new_observation,
+         %{
+           station_id: obs.station_id,
+           temperature: obs.temperature,
+           humidity: obs.humidity,
+           wind_speed: obs.wind_speed,
+           observed_at: obs.observed_at
+         }}
+      )
+
+      :ok
     end
   end
 
   defp fetch_observation(station_id) do
-    url = "http://api.weather.gov/stations/#{station_id}/observation/latest"
+    url = "https://api.weather.gov/stations/#{station_id}/observations/latest"
     headers = [{"User-Agent", "weather_system/0.1.0"}]
 
     with {:ok, %{status: 200, body: body}} <-
@@ -36,8 +53,8 @@ defmodule Core.Station.Workers.FetchStationDataWorker do
   defp parse_observation(%{"properties" => props}) do
     with {:ok, observed_at, _} <- DateTime.from_iso8601(props["timestamp"]),
          temperature <- get_in(props, ["temperature", "value"]),
-         humidity <- get_in(props, ["humidity", "value"]),
-         wind_speed <- get_in(props, ["wind_speed", "value"]) do
+         humidity <- get_in(props, ["relativeHumidity", "value"]),
+         wind_speed <- get_in(props, ["windSpeed", "value"]) do
       {:ok,
        %{
          temperature: temperature,
