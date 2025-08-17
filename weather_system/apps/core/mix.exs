@@ -32,7 +32,8 @@ end
       {:commanded_ecto_projections, "~> 1.3"},
       {:jason, "~> 1.4"},
       {:postgrex, ">= 0.0.0"},
-      {:ecto_sql, "~> 3.11"}
+      {:ecto_sql, "~> 3.11"},
+      {:oban, "~> 2.17"}
     ]
   end
 end
