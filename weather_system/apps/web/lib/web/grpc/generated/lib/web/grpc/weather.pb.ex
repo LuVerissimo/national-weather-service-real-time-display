@@ -18,12 +18,28 @@ defmodule Weather.Observation do
   field :observed_at, 5, type: :string, json_name: "observedAt"
 end
 
+defmodule Weather.Observations do
+  @moduledoc false
+
+  use Protobuf, protoc_gen_elixir_version: "0.15.0", syntax: :proto3
+
+  field :observations, 1, repeated: true, type: Weather.Observation
+end
+
+defmodule Weather.Empty do
+  @moduledoc false
+
+  use Protobuf, protoc_gen_elixir_version: "0.15.0", syntax: :proto3
+end
+
 defmodule Weather.WeatherService.Service do
   @moduledoc false
 
   use GRPC.Service, name: "weather.WeatherService", protoc_gen_elixir_version: "0.15.0"
 
   rpc :GetObservation, Weather.GetObservationRequest, Weather.Observation
+
+  rpc :GetAllObservations, Weather.Empty, Weather.Observations
 end
 
 defmodule Weather.WeatherService.Stub do

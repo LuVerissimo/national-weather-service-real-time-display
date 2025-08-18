@@ -2,29 +2,28 @@ defmodule WebWeb.Router do
   use WebWeb, :router
 
   pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_live_flash
-    plug :put_root_layout, html: {WebWeb.Layouts, :root}
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_live_flash)
+    plug(:put_root_layout, html: {WebWeb.Layouts, :root})
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
   end
-
-    scope "/", WebWeb do
-    pipe_through :browser
-    live "/dashboard", WeatherDashboardLive
-  end
-
 
   # Other scopes may use custom stacks.
-  scope "/api", Web do
-    pipe_through :api
+  scope "/api", WebWeb do
+    pipe_through(:api)
 
-    get "/observations/:id", ObservationController, :show
+    get("/observations/:station_id", ObservationController, :index)
+  end
+
+  scope "/", WebWeb do
+    pipe_through(:browser)
+    live( "/dashboard", WeatherDashboardLive)
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
@@ -37,10 +36,10 @@ defmodule WebWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/dev" do
-      pipe_through :browser
+      pipe_through(:browser)
 
-      live_dashboard "/dashboard", metrics: WebWeb.Telemetry
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
+      live_dashboard("/dashboard", metrics: WebWeb.Telemetry)
+      forward("/mailbox", Plug.Swoosh.MailboxPreview)
     end
   end
 end

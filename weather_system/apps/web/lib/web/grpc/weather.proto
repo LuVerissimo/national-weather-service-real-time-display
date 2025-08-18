@@ -4,6 +4,7 @@ package weather;
 
 service WeatherService {
      rpc GetObservation(GetObservationRequest) returns (Observation);
+     rpc GetAllObservations(Empty) returns (Observations);
 }
 
 message GetObservationRequest {
@@ -17,3 +18,9 @@ message Observation {
      float wind_speed = 4;
      string observed_at = 5;
 }
+
+message Observations {
+     repeated Observation observations = 1;
+}
+
+message Empty {}

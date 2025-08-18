@@ -1,6 +1,6 @@
-defmodule Web.GRPC.Endpoint do
+defmodule WebWeb.GRPC.Endpoint do
   use GRPC.Endpoint
 
   intercept(GRPC.Server.Interceptors.Logger)
-  run(Web.GRPC.WeatherServer)
+  run(WebWeb.GRPC.WeatherServer)
 end

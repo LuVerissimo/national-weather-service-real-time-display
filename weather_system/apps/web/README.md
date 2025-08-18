@@ -11,6 +11,28 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
 
+----------------
+### Endpoints:
+----------------
+Generate UUID --> station_id = Ecto.UUID.generate()
+
+REST
+``` 
+GET "/observations/:station_id"
+
+Terminal Example
+curl http://localhost:4000/api/observations/2d92f26e-1221-4400-91f8-54fbe4d2f505
+
+```
+GRPC with Postman
+``` 
+grpcurl -plaintext \
+  -d '{"station_id": "YOUR_STATION_ID"}' \
+  localhost:50051 \
+  weather.WeatherService/GetObservation
+``` 
+
+
 ## Learn more
 
   * Official website: https://www.phoenixframework.org/

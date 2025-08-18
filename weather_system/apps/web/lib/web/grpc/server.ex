@@ -1,39 +1,70 @@
-defmodule Web.GRPC.WeatherServer do
+defmodule WebWeb.GRPC.WeatherServer do
   use GRPC.Server, service: Weather.WeatherService.Service
 
+  import Ecto.Query, only: [from: 2]
   alias Core.Repo
   alias Core.Station.ReadModels.Observation
 
-  # @doc """
-  # Wrap function call and handle gRPC errors
-  # Return protobuf struct | {:error, code, message}
-  # """
+  def get_observation(%Weather.GetObservationRequest{station_id: id}, _stream) do
+    query =
+      from(o in Observation,
+        where: o.station_id == ^id,
+        order_by: [desc: o.observed_at],
+        limit: 1
+      )
 
-  # defp handle_grpc_error(fun) do
-  #   try do
-  #     fun.()
-  #   rescue
-  #     e in Ecto.NoResultsError ->
-  #       {:error, :not_found, "Resource not found #{e.message}"}
-
-  #     e ->
-  #       {:error, :internal, "Internal server error: #{Exception.message(e)}"}
-  #   end
-  # end
-
-  def get_observation(req, _stream) do
-    case Repo.get(Observation, req.station_id) do
+    case Repo.one(query) do
       nil ->
         {:error, :not_found, "Observation not found"}
 
-      observation ->
+      obs ->
         %Weather.Observation{
-          station_id: observation.station_id,
-          temperature: observation.temperature,
-          humidity: observation.humidity,
-          wind_speed: observation.wind_speed,
-          observed_at: DateTime.to_iso8601(observation.observed_at)
+          station_id: obs.station_id,
+          temperature: obs.temperature,
+          humidity: obs.humidity,
+          wind_speed: obs.wind_speed,
+          observed_at: DateTime.to_iso8601(obs.observed_at)
         }
     end
   end
+
+  def get_all_observations(%Weather.GetObservationRequest{station_id: id}, _stream) do
+    query =
+      from(o in Observation,
+        where: o.station_id == ^id,
+        order_by: [desc: o.observed_at]
+      )
+
+    observations = Repo.all(query)
+
+    obs_list =
+      Enum.map(observations, fn obs ->
+        %Weather.Observation{
+          station_id: obs.station_id,
+          temperature: obs.temperature,
+          humidity: obs.humidity,
+          wind_speed: obs.wind_speed,
+          observed_at: DateTime.to_iso8601(obs.observed_at)
+        }
+      end)
+
+    %Weather.Observations{observations: obs_list}
+  end
+
+  # def get_all(_req, _stream) do
+  #   observations = Repo.all(Observation)
+
+  #   obs_list =
+  #     Enum.map(observations, fn obs ->
+  #       %Weather.Observation{
+  #         station_id: obs.station_id,
+  #         temperature: obs.temperature,
+  #         humidity: obs.humidity,
+  #         wind_speed: obs.wind_speed,
+  #         observed_at: DateTime.to_iso8601(obs.observed_at)
+  #       }
+  #     end)
+
+  #   %Weather.Observations{observations: obs_list}
+  # end
 end
