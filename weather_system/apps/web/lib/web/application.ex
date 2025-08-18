@@ -13,15 +13,13 @@ defmodule Web.Application do
       {Phoenix.PubSub, name: Web.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: Web.Finch},
-      # Start a worker by calling: Web.Worker.start_link(arg)
-      # {Web.Worker, arg},
-      # Start to serve requests, typically the last entry
-      WebWeb.Endpoint
+      WebWeb.Endpoint,
+      {GRPC.Server.Supervisor, endpoint: WebWeb.GRPC.Endpoint, port: 50051, start_server: true}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: Web.Supervisor]
+    opts = [strategy: :one_for_one, name: WebWeb.Supervisor]
     Supervisor.start_link(children, opts)
   end
 

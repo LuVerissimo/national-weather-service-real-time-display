@@ -12,6 +12,8 @@ defmodule Web.MixProject do
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
+      compilers: Mix.compilers(),
+      protoc_paths: [Path.wildcard("lib/web/grpc/*.proto")],
       aliases: aliases(),
       deps: deps()
     ]
@@ -60,7 +62,8 @@ defmodule Web.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
       {:grpc, "~> 0.10"},
-      {:protobuf, "~> 0.11"},
+      {:protobuf, "~> 0.15"},
+      {:cowboy, "~> 2.10"},
       {:core, in_umbrella: true}
     ]
   end
@@ -80,7 +83,7 @@ defmodule Web.MixProject do
         "tailwind web --minify",
         "esbuild web --minify",
         "phx.digest"
-      ]
+      ],
     ]
   end
 end
