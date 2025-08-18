@@ -16,7 +16,8 @@ defmodule Web.Application do
       # Start a worker by calling: Web.Worker.start_link(arg)
       # {Web.Worker, arg},
       # Start to serve requests, typically the last entry
-      WebWeb.Endpoint
+      WebWeb.Endpoint,
+      {GRPC.Server.Supervisor, endpoint: Your.Endpoint, port: 50051}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

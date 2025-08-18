@@ -3,7 +3,7 @@ syntax = "proto3";
 package weather;
 
 service WeatherService {
-     rpc GetObservation(GetObservationRequest) return (Observation);
+     rpc GetObservation(GetObservationRequest) returns (Observation);
 }
 
 message GetObservationRequest {
