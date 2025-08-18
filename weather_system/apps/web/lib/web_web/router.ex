@@ -23,6 +23,8 @@ defmodule WebWeb.Router do
   # Other scopes may use custom stacks.
   scope "/api", Web do
     pipe_through :api
+
+    get "/observations/:id", ObservationController, :show
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
